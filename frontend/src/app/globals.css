@@ -92,3 +92,22 @@
     border-color: hsl(var(--primary));
   }
 }
+
+.editor {
+  word-wrap: break-word;
+  min-height: 100px;
+  min-width: 250px;
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.highlight {
+  background-position: center calc(100% + 2px);
+  background-repeat: no-repeat;
+  border-bottom: 2px solid #ffb619;
+  contain: layout style;
+  padding-bottom: 1px;
+  transition: border-bottom-color 0.5s linear;
+  border-bottom-width: 4px;
+}
