@@ -6,3 +6,4 @@ class Response(db.Document):
     essay = db.StringField(required=True)
     response = db.DictField()
     grammar = db.ListField()
+    readability = db.DictField()

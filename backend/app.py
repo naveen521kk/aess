@@ -3,6 +3,7 @@ import docx2txt
 import PyPDF2
 import uvicorn
 import json
+import utils
 import language_tool_python
 import mongoengine as db
 import google.generativeai as genai
@@ -167,6 +168,33 @@ def get_llm_feedback(userid: str, essay_item: EssayItem):
     except Exception as e:
         print(e)
         return llm_response.text
+
+
+@app.post("/get_readability_levels")
+def get_readability_levels(userid: str, essay_item: EssayItem):
+    essay = essay_item.text
+    response = Response.objects(userid=userid, essay=essay).first()
+    if response is None:
+        response = Response(userid=userid, essay=essay)
+    if response.readability:
+        return response.readability
+    smog_score = utils.smog_readability(essay)
+    coleman_liau_score = utils.coleman_liau_readability(essay)
+    fk_score = utils.flesch_kincaid_readability(essay)
+    gf_score = utils.gunning_fog_readability(essay)
+    readability_level = utils.get_weighted_readability_level(
+        smog_score, coleman_liau_score, fk_score, gf_score
+    )
+    readability_levels = {
+        "smog": smog_score,
+        "coleman_liau": coleman_liau_score,
+        "flesch_kincaid": fk_score,
+        "gunning_fog": gf_score,
+        "readability_level": readability_level,
+    }
+    response.readability = readability_levels
+    response.save()
+    return readability_levels
 
 
 if __name__ == "__main__":
