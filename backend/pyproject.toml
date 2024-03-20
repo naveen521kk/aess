@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["Pranav Raj H <vinstarpranav@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.110.0"
+spacy = "^3.7.4"
+language-tool-python = "^2.7.3"
+docx2txt = "^0.8"
+pypdf2 = "^3.0.1"
+uvicorn = "^0.28.1"
+sqlalchemy = "^2.0.28"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
