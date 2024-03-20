@@ -1,6 +1,5 @@
 import mongoengine as db
 
-db.connect('essay_scores')
 
 class Response(db.Document):
     userid = db.StringField(required=True)
