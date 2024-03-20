@@ -60,7 +60,7 @@ function processSuggestions(essay: string, suggestions: Suggestion[]) {
   );
 }
 
-export function DisplayEssay({ essay }: { essay: string }) {
+export function DisplayEssay({ essay, uid }: { essay: string; uid: string }) {
   const [suggestions, setSuggestions] = React.useState<Suggestion[] | null>(
     null,
   );
@@ -70,11 +70,11 @@ export function DisplayEssay({ essay }: { essay: string }) {
     const a = async () => {
       if (!essay) return;
 
-      const res = await getGrammarCheckResult(essay);
+      const res = await getGrammarCheckResult(essay, uid);
       setSuggestions(res);
     };
     a();
-  }, [essay]);
+  }, [essay, uid]);
 
   if (!essay) return null;
   console.log({ suggestions });

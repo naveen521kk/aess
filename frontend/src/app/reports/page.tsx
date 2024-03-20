@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -13,8 +13,12 @@ import { DisplayReportsWithScore } from "./display-reports-with-score";
 import { RubricResponse } from "@/lib/types";
 import { getLlmFeedback } from "@/lib/api";
 import { toast } from "sonner";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { Loader2 } from "lucide-react";
+import { auth } from "@/firebase";
 
 export default function Example() {
+  const [user, loading, error] = useAuthState(auth);
   const router = useRouter();
   const [essay, setEssay] = React.useState("");
   const [rerenderCount, setRerenderCount] = React.useState(0);
@@ -37,8 +41,9 @@ export default function Example() {
   React.useEffect(() => {
     const a = async () => {
       if (!essay) return;
+      if (!user) return;
       try {
-        const data = await getLlmFeedback(essay);
+        const data = await getLlmFeedback(essay, user.uid);
         console.log({ data });
         setLlmFeedback(data);
       } catch (e) {
@@ -54,8 +59,27 @@ export default function Example() {
       }
     };
     a();
-  }, [essay, rerenderCount]);
+  }, [essay, rerenderCount, user]);
 
+  if (loading) {
+    return (
+      <main className="container flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="container flex min-h-screen items-center justify-center">
+        <p>Error: {error.message}</p>
+      </main>
+    );
+  }
+
+  if (!user) {
+    redirect("/login");
+  }
   return (
     <main>
       <ResizablePanelGroup
@@ -64,7 +88,7 @@ export default function Example() {
       >
         <ResizablePanel defaultSize={65} order={1}>
           <ScrollArea className="h-[100vh] w-full">
-            <DisplayEssay essay={essay} />
+            <DisplayEssay essay={essay} uid={user.uid} />
           </ScrollArea>
         </ResizablePanel>
         <ResizableHandle withHandle />

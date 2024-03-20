@@ -8,6 +8,7 @@ import mongoengine as db
 import google.generativeai as genai
 
 from fastapi import FastAPI, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from models import Response
 from dotenv import load_dotenv
@@ -21,14 +22,25 @@ model = genai.GenerativeModel("gemini-pro")
 
 db.connect("essay_scores")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 class EssayItem(BaseModel):
     text: str
+
 
 @app.get("/home")
 async def home():
     return {"message": "Hello World"}
 
-@app.post("/parse_text")
+
+@app.post("/parse_file")
 async def parse_file(file: UploadFile):
     extension = file.filename.split(".")[-1]
     if extension == "docx":
@@ -55,7 +67,10 @@ async def check_grammer_mechanics(userid: str, essay_item: EssayItem):
     if response is None:
         response = Response(userid=userid, essay=essay_item.text)
     if response.grammar is not None:
-        return response.grammar, 100 - len(response.grammar) / max(len(response.essay.split()), 1) * 100
+        return (
+            response.grammar,
+            100 - len(response.grammar) / max(len(response.essay.split()), 1) * 100,
+        )
     text = essay_item.text
     matches = lang_tool.check(text)
     errors = []

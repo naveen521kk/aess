@@ -4,9 +4,11 @@ import { RubricResponse, Suggestion } from "./types";
 
 export async function getGrammarCheckResult(
   text: string,
+  userId: string,
 ): Promise<Suggestion[]> {
+  const searchParams = new URLSearchParams([["userid", userId]]);
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/gram_mech_check`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/gram_mech_check?${searchParams}`,
     {
       method: "POST",
       headers: {
@@ -15,13 +17,21 @@ export async function getGrammarCheckResult(
       body: JSON.stringify({ text }),
     },
   );
+  if (!response.ok) {
+    throw "unknown error";
+  }
+
   const res = await response.json();
   return (res as any)[0];
 }
 
-export async function getLlmFeedback(text: string): Promise<RubricResponse> {
+export async function getLlmFeedback(
+  text: string,
+  userId: string,
+): Promise<RubricResponse> {
+  const searchParams = new URLSearchParams([["userid", userId]]);
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/get_llm_feedback`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/get_llm_feedback?${searchParams}`,
     {
       method: "POST",
       headers: {
@@ -33,6 +43,9 @@ export async function getLlmFeedback(text: string): Promise<RubricResponse> {
   const res = await response.json();
   if (typeof res === "string") {
     throw "unknown error";
+  }
+  if (!response.ok) {
+    throw res;
   }
   console.log(res);
   return res as any;
