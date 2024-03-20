@@ -1,0 +1,96 @@
+version: "3"
+
+services:
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.9
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      # - "--api.insecure=true" # for debug interface on 8080
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      # - "--providers.file.directory=/configs/"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.web-secure.address=:443"
+      - "--experimental.http3=true"
+      - "--entrypoints.web-secure.http3"
+      # Access logs: Which request+status from which IP using which User-Agent?
+      - "--accesslog=true"
+      - "--accesslog.bufferingsize=100"
+      - "--accesslog.format=json"
+      - "--accesslog.fields.headers.defaultMode=drop"
+      - "--accesslog.fields.headers.names.User-Agent=keep"
+      - "--accesslog.fields.names.ServiceName=drop"
+      - "--accesslog.fields.names.ClientHost=drop"
+      - "--accesslog.fields.names.ClientPort=drop"
+      - "--accesslog.fields.names.ClientUsername=drop"
+      - "--accesslog.fields.names.DownstreamContentSize=drop"
+      - "--accesslog.fields.names.Duration=drop"
+      - "--accesslog.fields.names.OriginContentSize=drop"
+      - "--accesslog.fields.names.OriginDuration=drop"
+      - "--accesslog.fields.names.Overhead=drop"
+      - "--accesslog.fields.names.RequestContentSize=drop"
+      - "--accesslog.fields.names.RequestCount=drop"
+    ports:
+      # The HTTP port
+      - "80:80"
+      # - "3000:3000"
+      # The Web UI (enabled by --api.insecure=true)
+      # - "8080:8080"
+    networks:
+      - default
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - 7017:27017
+
+  backend:
+    container_name: fastapi-backend
+    restart: "always"
+    build: ./backend/
+    depends_on:
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.main-web-compress.compress=true"
+      - "traefik.http.middlewares.stripprefix.stripprefix.prefixes=/api/v1"
+      # http
+
+      # - "traefik.http.routers.main.rule=Host(`localhost`) && PathPrefix(`/api/v1`)"
+      - "traefik.http.routers.main.rule=PathPrefix(`/api/v1`)"
+      - "traefik.http.routers.main.middlewares=main-web-compress,stripprefix"
+    env_file:
+      - ./backend/.env
+    environment:
+      FORWARDED_ALLOW_IPS: "*"
+      NODE_ENV: production
+      ROOT_PATH: /api/v1
+      MONGO_URI: mongodb://mongo:27017/opd-token
+    links:
+      - mongo
+    volumes:
+      - ./:/backend
+  frontend:
+    container_name: nextjs-frontend
+    build: ./frontend/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.packages-compress.compress=true"
+      # http
+      # - "traefik.http.routers.packages.rule=Host(`localhost`) && !PathPrefix(`/api/v1`)"
+      - "traefik.http.routers.packages.rule=!PathPrefix(`/api/v1`)"
+      - "traefik.http.routers.packages.middlewares=packages-compress"
+    environment:
+      FORWARDED_ALLOW_IPS: "*"
+      NODE_ENV: production
+      NEXT_PUBLIC_API_BASE_URL: /api/v1
+    volumes:
+      - ./:/frontend
+networks:
+  default:
