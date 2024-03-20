@@ -55,7 +55,7 @@ services:
     restart: "always"
     build: ./backend/
     depends_on:
-      - db
+      - mongo
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.main-web-compress.compress=true"
