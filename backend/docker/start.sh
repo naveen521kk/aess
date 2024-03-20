@@ -31,11 +31,8 @@ else
 fi
 
 # Wait for mysql to start
-echo "Sleeping for mysql to start"
-sleep 10
-
-# run a sanity check before starting, ie is db filled correctly
-python3 -c "import app; db = app.database.SessionLocal(); assert app.crud.get_hod(db, 'hod@cse') is not None"
+echo "Sleeping for mongo to start"
+sleep 40
 
 # Start Gunicorn
 exec gunicorn -k "$WORKER_CLASS" -c "$GUNICORN_CONF" "$APP_MODULE"
