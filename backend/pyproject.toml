@@ -13,7 +13,10 @@ language-tool-python = "^2.7.3"
 docx2txt = "^0.8"
 pypdf2 = "^3.0.1"
 uvicorn = "^0.28.1"
-sqlalchemy = "^2.0.28"
+python-multipart = "^0.0.9"
+mongoengine = "^0.28.2"
+google-generativeai = "^0.4.1"
+python-dotenv = "^1.0.1"
 
 
 [build-system]
