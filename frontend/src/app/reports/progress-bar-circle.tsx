@@ -22,7 +22,7 @@ const ProgressBarCircle: React.FC<ProgressBarCircleProps> = ({ progress }) => {
         strokeWidth="2"
       >
         <circle
-          className="text-primary-foreground opacity-20"
+          className="text-card-foreground opacity-20"
           cx="50"
           cy="50"
           r="45"
