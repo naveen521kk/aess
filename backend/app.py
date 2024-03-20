@@ -197,5 +197,27 @@ def get_readability_levels(userid: str, essay_item: EssayItem):
     return readability_levels
 
 
+@app.post("/get_essay_stats")
+def get_essay_stats(userid: str, essay_item: EssayItem):
+    essay = essay_item.text
+    response = Response.objects(userid=userid, essay=essay).first()
+    if response is None:
+        response = Response(userid=userid, essay=essay)
+    if response.stats:
+        return response.stats
+    total_characters, alphanumeric_characters = utils.count_characters(essay)
+    total_words = utils.count_words(essay)
+    total_sentences = utils.count_sentences(essay)
+    stats = {
+        "total_characters": total_characters,
+        "alphanumeric_characters": alphanumeric_characters,
+        "total_words": total_words,
+        "total_sentences": total_sentences,
+    }
+    response.stats = stats
+    response.save()
+    return stats
+
+
 if __name__ == "__main__":
     uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)

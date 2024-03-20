@@ -7,3 +7,4 @@ class Response(db.Document):
     response = db.DictField()
     grammar = db.ListField()
     readability = db.DictField()
+    stats = db.DictField()

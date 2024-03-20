@@ -93,3 +93,18 @@ def get_readability_levels(essay):
     }
 
 
+def count_characters(text):
+    total_characters = len(text)
+    text = re.sub(r"[^a-zA-Z0-9]", "", text)
+    alphanumeric_characters = len(text)
+    return total_characters, alphanumeric_characters
+
+
+def count_words(text):
+    words = text.split()
+    return len(words)
+
+
+def count_sentences(text: str):
+    sentences = re.split(r"[.!?]", text)
+    return len(sentences)
