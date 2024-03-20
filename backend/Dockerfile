@@ -7,6 +7,10 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 FROM python:3.11-slim-bullseye
 WORKDIR /app
+# install java
+RUN apt-get update -qq \
+    && apt-get install --no-install-recommends -y \
+    default-jre default-jdk
 COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 COPY ./docker/start.sh /start.sh
