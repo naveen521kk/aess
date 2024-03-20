@@ -7,10 +7,6 @@ RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 FROM python:3.10-slim-bullseye
 WORKDIR /app
-# install weasyprint's dependencies
-RUN  apt-get update -qq \
-    && apt-get install --no-install-recommends -y \
-    libpango1.0
 COPY --from=requirements-stage /tmp/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 COPY ./docker/start.sh /start.sh
