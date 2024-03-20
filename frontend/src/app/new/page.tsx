@@ -27,6 +27,12 @@ export default function Home() {
   const [file, setFile] = React.useState<File | null>(null);
   const router = useRouter();
 
+  React.useEffect(() => {
+    if (!loading && !user) {
+      redirect("/login");
+    }
+  }, [user, loading]);
+
   if (loading) {
     return (
       <main className="container flex min-h-screen items-center justify-center">
@@ -44,7 +50,7 @@ export default function Home() {
   }
 
   if (!user) {
-    redirect("/login");
+    return <></>;
   }
 
   return (
