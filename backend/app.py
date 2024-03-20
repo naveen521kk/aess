@@ -20,7 +20,7 @@ lang_tool = language_tool_python.LanguageTool("en-US")
 genai.configure(api_key=os.environ.get("GOOGLE_API_KEY"))
 model = genai.GenerativeModel("gemini-pro")
 
-db.connect(host=os.environ.get("MONGO_URI", "mongodb://127.0.0.1:27017/essay_scores"))
+db.connect("essay_scores")
 
 app.add_middleware(
     CORSMiddleware,
@@ -66,7 +66,7 @@ async def check_grammer_mechanics(userid: str, essay_item: EssayItem):
     response = Response.objects(userid=userid, essay=essay_item.text).first()
     if response is None:
         response = Response(userid=userid, essay=essay_item.text)
-    if response.grammar is not None:
+    if response.grammar:
         return (
             response.grammar,
             100 - len(response.grammar) / max(len(response.essay.split()), 1) * 100,
