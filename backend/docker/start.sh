@@ -5,6 +5,8 @@ if [ -f /app/app/main.py ]; then
     DEFAULT_MODULE_NAME=app.main
 elif [ -f /app/main.py ]; then
     DEFAULT_MODULE_NAME=main
+elif [ -f /app/app.py ]; then
+    DEFAULT_MODULE_NAME=app
 fi
 MODULE_NAME=${MODULE_NAME:-$DEFAULT_MODULE_NAME}
 VARIABLE_NAME=${VARIABLE_NAME:-app}
