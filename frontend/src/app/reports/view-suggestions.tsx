@@ -16,7 +16,7 @@ export function ViewSuggestions({ suggestions }: { suggestions: string[] }) {
     <>
       <Drawer>
         <DrawerTrigger asChild>
-          <Button className="w-full" variant="secondary">
+          <Button className="w-full" variant="default">
             View Suggestions
           </Button>
         </DrawerTrigger>

@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ViewFeedback } from "./view-feedback";
 import { Button } from "@/components/ui/button";
 import { ViewSuggestions } from "./view-suggestions";
+import { ViewMetrics } from "./view-metrics";
 
 export function DisplayReportsWithScore({
   essay,
@@ -38,10 +39,14 @@ export function DisplayReportsWithScore({
       <div className="w-full">
         <ScoreCard essay={essay} score={llmFeedback.total} />
       </div>
-      <div className="flex w-full flex-row space-x-4 rounded-lg border bg-card p-6 text-card-foreground shadow">
+      {/* <div className="flex w-full flex-col space-y-4 rounded-lg border bg-card p-6 text-card-foreground shadow">
+        <div className="flex w-full flex-row space-x-4">
+          <ViewMetrics readability={llmFeedback.readability} />
+          <ViewSuggestions suggestions={llmFeedback.suggestions} />
+        </div>
         <ViewFeedback feedback={llmFeedback.feedback} />
-        <ViewSuggestions suggestions={llmFeedback.suggestions} />
-      </div>
+      </div> */}
+
       <div className="w-full space-y-4 rounded-lg border bg-card p-4 text-card-foreground shadow">
         <div className="w-full ">
           <div className="space-y-2">
