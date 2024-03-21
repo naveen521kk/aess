@@ -102,3 +102,22 @@ export async function getEssayStats(
   console.log(res);
   return res as any;
 }
+
+export async function autoCompleteEssay(text: string): Promise<string> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/auto_complete_essay`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    },
+  );
+  const res = await response.json();
+  if (!response.ok) {
+    throw res;
+  }
+  console.log(res);
+  return res as any;
+}
