@@ -35,3 +35,10 @@ export type Readability = {
   gunning_fog: number;
   readability_level: string;
 };
+
+export type EssayStats = {
+  total_characters: number;
+  alphanumeric_characters: number;
+  total_words: number;
+  total_sentences: number;
+};

@@ -10,47 +10,45 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Readability } from "@/lib/types";
+import { EssayStats, Readability } from "@/lib/types";
 
-export function ViewMetrics({ readability }: { readability: Readability }) {
+export function ViewEssayStats({ stats }: { stats: EssayStats }) {
   return (
     <>
       <Drawer>
         <DrawerTrigger asChild>
           <Button className="w-full" variant="default">
-            View Metrics
+            View Essay Stats
           </Button>
         </DrawerTrigger>
         <DrawerContent>
           <div className="mx-auto w-full max-w-sm">
             <DrawerHeader>
-              <DrawerTitle>Metrics</DrawerTitle>
+              <DrawerTitle>Essay Statistics</DrawerTitle>
               <DrawerDescription>
                 Here are some readability scores for the essay.
               </DrawerDescription>
             </DrawerHeader>
             <ul className="list-disc pb-5 pl-8">
-              {readability && (
+              {stats && (
                 <>
                   <li>
-                    <span className="font-semibold">Readability Level:</span>{" "}
-                    {readability.readability_level}
+                    <span className="font-semibold">
+                      Alphanumeric Characters:
+                    </span>{" "}
+                    {stats.alphanumeric_characters}
                   </li>
                   <li>
-                    <span className="font-semibold">Flesch-Kincaid: </span>
-                    {readability.flesch_kincaid.toFixed(2)}
+                    <span className="font-semibold">Total Characters: </span>
+                    {stats.total_characters}
                   </li>
                   <li>
-                    <span className="font-semibold">Gunning Fog Index: </span>
-                    {readability.gunning_fog.toFixed(2)}
+                    <span className="font-semibold">Total Sentences: </span>
+                    {stats.total_sentences}
                   </li>
                   <li>
-                    <span className="font-semibold">Coleman Liau: </span>{" "}
-                    {readability.coleman_liau.toFixed(2)}
-                  </li>
-                  <li>
-                    <span className="font-semibold">Smog: </span>{" "}
-                    {readability.smog.toFixed(2)}
+                    <span className="font-semibold">Total Words: </span>{" "}
+                    {stats.total_words}
                   </li>
                 </>
               )}

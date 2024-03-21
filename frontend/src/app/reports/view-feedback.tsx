@@ -16,7 +16,7 @@ export function ViewFeedback({ feedback }: { feedback: string }) {
     <>
       <Drawer>
         <DrawerTrigger asChild>
-          <Button className="w-full" variant="secondary">
+          <Button className="w-full" variant="default">
             View Feedback
           </Button>
         </DrawerTrigger>

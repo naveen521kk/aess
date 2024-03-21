@@ -1,6 +1,6 @@
 "use server";
 
-import { Readability, RubricResponse, Suggestion } from "./types";
+import { EssayStats, Readability, RubricResponse, Suggestion } from "./types";
 
 export async function getGrammarCheckResult(
   text: string,
@@ -58,6 +58,32 @@ export async function getReadabilityLevels(
   const searchParams = new URLSearchParams([["userid", userId]]);
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_BASE_URL}/get_readability_levels?${searchParams}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    },
+  );
+  const res = await response.json();
+  if (typeof res === "string") {
+    throw "unknown error";
+  }
+  if (!response.ok) {
+    throw res;
+  }
+  console.log(res);
+  return res as any;
+}
+
+export async function getEssayStats(
+  text: string,
+  userId: string,
+): Promise<EssayStats> {
+  const searchParams = new URLSearchParams([["userid", userId]]);
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/get_essay_stats?${searchParams}`,
     {
       method: "POST",
       headers: {
