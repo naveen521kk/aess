@@ -16,7 +16,9 @@ export function ViewFeedback({ feedback }: { feedback: string }) {
     <>
       <Drawer>
         <DrawerTrigger asChild>
-          <Button className="w-full">View Feedback</Button>
+          <Button className="w-full" variant="secondary">
+            View Feedback
+          </Button>
         </DrawerTrigger>
         <DrawerContent>
           <div className="mx-auto w-full max-w-sm">

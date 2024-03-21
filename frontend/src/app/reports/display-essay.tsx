@@ -80,7 +80,7 @@ export function DisplayEssay({ essay, uid }: { essay: string; uid: string }) {
   console.log({ suggestions });
   return (
     <>
-      <div className="flex h-full items-start justify-center p-14">
+      <div className="flex h-full items-start justify-center p-8">
         <div className="text-2xl leading-10">
           <div className="editor" spellCheck="false">
             {processSuggestions(essay, suggestions || [])}

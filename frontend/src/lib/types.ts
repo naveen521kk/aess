@@ -1,34 +1,3 @@
-// [
-//     [
-//       {
-//         "message": "Three successive sentences begin with the same word. Consider rewording the sentence or use a thesaurus to find a synonym.",
-//         "category": "ENGLISH_WORD_REPEAT_BEGINNING_RULE",
-//         "location": [
-//           344,
-//           346
-//         ],
-//         "suggestion": [
-//           "Furthermore, it",
-//           "Likewise, it",
-//           "Not only that, but it"
-//         ]
-//       },
-//       {
-//         "message": "Three successive sentences begin with the same word. Consider rewording the sentence or use a thesaurus to find a synonym.",
-//         "category": "ENGLISH_WORD_REPEAT_BEGINNING_RULE",
-//         "location": [
-//           415,
-//           417
-//         ],
-//         "suggestion": [
-//           "Furthermore, it",
-//           "Likewise, it",
-//           "Not only that, but it"
-//         ]
-//       }
-//     ],
-//     99.0521327014218
-//   ]
 export type Suggestion = {
   message: string;
   category: string;
@@ -57,4 +26,12 @@ export type RubricResponse = {
   total: number;
   feedback: string;
   suggestions: string[];
+};
+
+export type Readability = {
+  smog: number;
+  coleman_liau: number;
+  flesch_kincaid: number;
+  gunning_fog: number;
+  readability_level: string;
 };
