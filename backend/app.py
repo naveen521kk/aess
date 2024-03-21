@@ -170,6 +170,18 @@ def get_llm_feedback(userid: str, essay_item: EssayItem):
         return llm_response.text
 
 
+@app.post("/auto_complete_essay")
+def auto_complete_essay(essay_item: EssayItem):
+    essay = essay_item.text
+    prompt = """I have written the first half of an essay. I would like you to generate the second half of the essay with the same size as the first half, continuing in the same style and maintaining the same tone and flow as the first half.
+
+Here is the first half of the essay:"""
+    text = prompt + "\n```" + essay + "\n```"
+    completion = model.generate_content(text)
+    response = essay + completion.text
+    return response
+
+
 @app.post("/get_readability_levels")
 def get_readability_levels(userid: str, essay_item: EssayItem):
     essay = essay_item.text
